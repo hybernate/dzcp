@@ -610,6 +610,15 @@ case 'showthread';
 	  	}
       
       $title = re($getw['topic']).' - '.$title;
+	  $qrybanner = db("SELECT * FROM ".$db['sponsoren']."
+			         WHERE banner = 1 ORDER BY RAND() LIMIT 1");
+      while($getbanner = _fetch($qrybanner))
+      {
+        $rotationsbanner .= show(_sponsors_bannerlink, array("id" => $getbanner['id'],
+                                                          "title" => htmlspecialchars(str_replace('http://', '', re($getbanner['link']))),
+                                                   	  		"banner" => (empty($getbanner['blink']) ? "../banner/sponsors/banner_".$getbanner['id'].".".$getbanner['bend'] : re($getbanner['blink']))));
+      }
+
       $index = show($dir."/forum_posts", array("head" => _forum_head,
                                                "where" => $wheres,
                                                "admin" => $admin,
@@ -639,6 +648,7 @@ case 'showthread';
                                                "nav" => $nav,
                       											   "vote" => $vote,
                       											   "f_abo" => $f_abo, 
+"rotationsbanner" => $rotationsbanner,
                                                "show" => $show));
     }
   } else {
